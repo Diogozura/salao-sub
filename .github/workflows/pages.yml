@@ -29,7 +29,9 @@ jobs:
         run: |
           if [ -z "$API_URL" ]; then echo "Secret API_URL não definido"; exit 1; fi
           mkdir -p dist
-          sed "s|__API_URL__|${API_URL}|g" index.html > dist/index.html
+          cp -r index.html css js dist/
+          sed -i "s|__API_URL__|${API_URL}|g" dist/js/config.js
+          grep -q "__API_URL__" dist/js/config.js && { echo "API_URL não foi injetado"; exit 1; } || true
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
